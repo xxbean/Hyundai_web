@@ -1,7 +1,5 @@
 import { NextRequest } from "next/server";
 
-export const runtime = "edge";
-
 const DEFAULT_ENDPOINT = "HYUNDAI-CHAT-A100";
 const DEFAULT_MODEL    = "Qwen/Qwen3.5-27B";
 const ROUTE_URL        = "https://run.vast.ai/route/";
@@ -15,9 +13,14 @@ export async function POST(req: NextRequest) {
   const tokens   = maxTokens  || 2048;
   const temp     = temperature ?? 0.7;
 
+  // content를 배열 형식으로 변환 (vLLM 호환)
+  const toContent = (text: string) => [{ type: "text", text }];
   const allMessages = [
-    ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
-    ...messages,
+    ...(systemPrompt ? [{ role: "system", content: toContent(systemPrompt) }] : []),
+    ...messages.map((m: any) => ({
+      role: m.role,
+      content: toContent(m.content),
+    })),
   ];
 
   const payload = {
@@ -27,6 +30,7 @@ export async function POST(req: NextRequest) {
     temperature: temp,
     top_p: 0.9,
     repetition_penalty: 1.0,
+    chat_template_kwargs: { enable_thinking: true },
   };
 
   // Step 1: route → worker URL + auth
