@@ -164,7 +164,7 @@ export default function Home() {
               value={systemPrompt}
               onChange={e => setSystemPrompt(e.target.value)}
               readOnly={promptMode !== "custom"}
-              rows={3}
+              rows={6}
               className={`bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-sm text-white font-mono resize-none focus:outline-none focus:border-[#00AAD2] transition-colors ${promptMode !== "custom" ? "opacity-70 cursor-default" : ""}`} />
           </div>
 
