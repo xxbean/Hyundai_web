@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 export const runtime = "edge";
 
 const DEFAULT_ENDPOINT = "HYUNDAI-CHAT-A100";
-const DEFAULT_MODEL    = "mlaipublic/gpt-oss-sft-2-keep";
+const DEFAULT_MODEL    = "Qwen/Qwen3.5-27B";
 const ROUTE_URL        = "https://run.vast.ai/route/";
 
 export async function POST(req: NextRequest) {
