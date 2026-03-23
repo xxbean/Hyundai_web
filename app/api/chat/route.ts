@@ -6,16 +6,14 @@ export async function POST(req: NextRequest) {
   const { messages, systemPrompt, modelUrl, modelId, apiKey } = await req.json();
 
   const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
+  const hfKey = apiKey || process.env.HF_API_KEY || "";
 
-  // endpoint: Vast.ai 등 custom URL이 있으면 그걸 쓰고, 없으면 HF
+  // endpoint: custom URL 있으면 그거, 없으면 HF router
   const endpoint =
     modelUrl ||
-    `https://router.huggingface.co/hf-inference/models/${HF_MODEL}/v1/chat/completions`;
+    `https://router.huggingface.co/hf-inference/v1/chat/completions`;
 
-  // model 필드: custom이 있으면 그걸 쓰고, 없으면 HF 모델명
   const model = modelId || HF_MODEL;
-
-  const hfKey = apiKey || process.env.HF_API_KEY || "";
 
   const body = {
     model,
@@ -50,3 +48,4 @@ export async function POST(req: NextRequest) {
     },
   });
 }
+
