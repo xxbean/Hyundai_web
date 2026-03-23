@@ -19,7 +19,7 @@ export default function Home() {
   const [messages, setMessages]       = useState<Message[]>([]);
   const [input, setInput]             = useState("");
   const [isLoading, setIsLoading]     = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
+  const [showSettings, setShowSettings] = useState(true);
   const [history, setHistory]         = useState<HistoryRow[]>([]);
 
   // Settings
@@ -131,8 +131,8 @@ export default function Home() {
             초기화
           </button>
           <button onClick={() => setShowSettings(!showSettings)}
-            className={`w-8 h-8 rounded-lg border flex items-center justify-center text-sm transition-all ${showSettings ? "border-[#00AAD2] bg-[#00AAD2]/20 text-[#00AAD2]" : "border-white/30 bg-white/10 text-white/70 hover:text-white"}`}>
-            ⚙
+            className={`w-8 h-8 rounded-lg border flex items-center justify-center text-sm transition-all ${showSettings ? "border-white/30 bg-white/10 text-white/70 hover:text-white" : "border-[#00AAD2] bg-[#00AAD2]/20 text-[#00AAD2]"}`}>
+            {showSettings ? "✕" : "⚙"}
           </button>
         </div>
       </header>
@@ -268,7 +268,7 @@ export default function Home() {
           </button>
         </div>
         <p className="text-[10px] font-mono text-blue-200/50 mt-2 text-center">
-          Vast.ai · {endpointId} · {modelId}
+          Vast.ai · {endpointId}
           {history.length > 0 && ` · 기록 ${history.length}개`}
         </p>
       </div>
