@@ -23,7 +23,14 @@ export default function Home() {
   const [history, setHistory]         = useState<HistoryRow[]>([]);
 
   // Settings
-  const [systemPrompt, setSystemPrompt] = useState("당신은 현대자동차 품질안전 전문 AI 어시스턴트입니다. 정확하고 전문적으로 답변해주세요.");
+  const PROMPTS = {
+    en: "# Instructions\n\nYou are an expert assistant specializing in automotive electrical and electronic systems. Identify which part of the vehicle require corrective action accurately based on the provided complaint. Always responses in English. Use the final channel for your responses to users. Given a user\'s complaint text (symptoms), identify which part of the vehicle require corrective action. Use domain knowledge and structured reasoning, then present a concise result. Q:",
+    ko: "# Instructions\n\nYou are an expert assistant specializing in automotive electrical and electronic systems. Identify which part of the vehicle require corrective action accurately based on the provided complaint. Always responses in Korean. Use the final channel for your responses to users. 사용자의 차량 관련 불만 텍스트(증상)가 주어지면, 시정 조치가 필요한 차량 부품을 식별하라. 도메인 지식과 구조화된 추론을 활용한 뒤, 간결한 결과를 제시하라. Q:",
+    custom: "",
+  };
+
+  const [promptMode, setPromptMode] = useState<"en" | "ko" | "custom">("ko");
+  const [systemPrompt, setSystemPrompt] = useState(PROMPTS.ko);
   const [vastApiKey, setVastApiKey]     = useState("");
   const [endpointId, setEndpointId]     = useState("HYUNDAI-CHAT-A100");
   const [modelId, setModelId]           = useState("Qwen/Qwen3.5-27B");
@@ -137,8 +144,28 @@ export default function Home() {
           {/* System Prompt */}
           <div className="flex flex-col gap-1.5 flex-1 min-w-[260px]">
             <label className="text-[10px] font-mono text-blue-200/70 uppercase tracking-widest">System Prompt</label>
-            <textarea value={systemPrompt} onChange={e => setSystemPrompt(e.target.value)} rows={3}
-              className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-sm text-white font-mono resize-none focus:outline-none focus:border-[#00AAD2] transition-colors" />
+            <div className="flex gap-1 mb-1">
+              {(["en", "ko", "custom"] as const).map((mode) => (
+                <button key={mode}
+                  onClick={() => {
+                    setPromptMode(mode);
+                    if (mode !== "custom") setSystemPrompt(PROMPTS[mode]);
+                  }}
+                  className={`px-3 py-1 rounded-md text-[11px] font-mono transition-all ${
+                    promptMode === mode
+                      ? "bg-[#00AAD2] text-white"
+                      : "bg-white/10 text-white/60 hover:text-white hover:bg-white/20"
+                  }`}>
+                  {mode === "en" ? "영어" : mode === "ko" ? "한국어" : "직접입력"}
+                </button>
+              ))}
+            </div>
+            <textarea
+              value={systemPrompt}
+              onChange={e => setSystemPrompt(e.target.value)}
+              readOnly={promptMode !== "custom"}
+              rows={3}
+              className={`bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-sm text-white font-mono resize-none focus:outline-none focus:border-[#00AAD2] transition-colors ${promptMode !== "custom" ? "opacity-70 cursor-default" : ""}`} />
           </div>
 
           {/* Vast Settings */}
