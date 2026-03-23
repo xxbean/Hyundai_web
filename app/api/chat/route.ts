@@ -3,25 +3,24 @@ import { NextRequest } from "next/server";
 export const runtime = "edge";
 
 export async function POST(req: NextRequest) {
-  const { messages, systemPrompt, modelUrl, apiKey } = await req.json();
+  const { messages, systemPrompt, modelUrl, modelId, apiKey } = await req.json();
 
-  // 기본값: HuggingFace Inference API (unsloth/Qwen3.5-27B)
-  // Vast.ai 쓸 때는 프론트에서 modelUrl 넘겨주면 됨
-  // HF Inference API는 작은 모델만 지원
-  // 27B는 Vast.ai 등 별도 서버 필요 → 설정에서 Custom API URL 입력
   const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
+
+  // endpoint: Vast.ai 등 custom URL이 있으면 그걸 쓰고, 없으면 HF
   const endpoint =
     modelUrl ||
     `https://router.huggingface.co/hf-inference/models/${HF_MODEL}/v1/chat/completions`;
 
+  // model 필드: custom이 있으면 그걸 쓰고, 없으면 HF 모델명
+  const model = modelId || HF_MODEL;
+
   const hfKey = apiKey || process.env.HF_API_KEY || "";
 
   const body = {
-    model: HF_MODEL,
+    model,
     messages: [
-      ...(systemPrompt
-        ? [{ role: "system", content: systemPrompt }]
-        : []),
+      ...(systemPrompt ? [{ role: "system", content: systemPrompt }] : []),
       ...messages,
     ],
     stream: true,
@@ -43,7 +42,6 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: err }), { status: upstream.status });
   }
 
-  // SSE 스트림 그대로 프록시
   return new Response(upstream.body, {
     headers: {
       "Content-Type": "text/event-stream",
