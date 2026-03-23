@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Qwen AI Chat",
+  title: "Hyundai AI Chat",
   description: "현대자동차 품질안전 AI 어시스턴트",
 };
 
