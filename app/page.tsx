@@ -107,7 +107,7 @@ export default function Home() {
       {/* Header */}
       <header className="flex items-center justify-between px-5 py-3 border-b border-[#002C5F]/20 bg-[#002C5F] flex-shrink-0">
         <div className="flex items-center gap-3">
-          <img src="/hyundai-logo.png" alt="Hyundai" className="h-7 w-auto object-contain" style={{filter:"brightness(0) invert(1)"}} />
+          <img src="/hyundai-logo.png" alt="Hyundai" className="h-8 w-auto object-contain"  />
           <span className="font-bold text-[15px] tracking-tight" style={{fontFamily:"'Arial', sans-serif", letterSpacing:"0.05em"}}>Hyundai AI Chat</span>
           <span className="hidden sm:block text-[10px] font-mono text-blue-200 bg-white/10 px-2 py-0.5 rounded-full">
             Vast.ai · {endpointId}
@@ -183,12 +183,8 @@ export default function Home() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 flex flex-col gap-5 bg-white">
         {messages.length === 0 && (
-          <div className="flex-1 flex flex-col items-center justify-center gap-4 text-center opacity-60 select-none">
-            <div className="w-16 h-16 rounded-2xl bg-[#002C5F]/10 flex items-center justify-center text-3xl">💬</div>
-            <div>
-              <p className="text-lg font-bold text-[#002C5F]">무엇이든 물어보세요</p>
-              <p className="text-sm font-mono text-[#002C5F]/50 mt-1">Vast.ai · {endpointId}</p>
-            </div>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <img src="/hyundai-logo.png" alt="Hyundai" className="w-72 h-auto object-contain opacity-15" />
           </div>
         )}
 
