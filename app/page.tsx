@@ -26,7 +26,7 @@ export default function Home() {
   const [systemPrompt, setSystemPrompt] = useState("당신은 현대자동차 품질안전 전문 AI 어시스턴트입니다. 정확하고 전문적으로 답변해주세요.");
   const [vastApiKey, setVastApiKey]     = useState("");
   const [endpointId, setEndpointId]     = useState("HYUNDAI-CHAT-A100");
-  const [modelId, setModelId]           = useState("mlaipublic/gpt-oss-sft-2-keep");
+  const [modelId, setModelId]           = useState("Qwen/Qwen3.5-27B");
   const [maxTokens, setMaxTokens]       = useState(2048);
   const [temperature, setTemperature]   = useState(0.7);
 
