@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
   const tokens   = maxTokens  || 2048;
   const temp     = temperature ?? 0.7;
 
-  // content를 배열 형식으로 변환 (vLLM 호환)
   const toContent = (text: string) => [{ type: "text", text }];
+
   const allMessages = [
     ...(systemPrompt ? [{ role: "system", content: toContent(systemPrompt) }] : []),
     ...messages.map((m: any) => ({
@@ -61,8 +61,12 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: `worker 라우팅 실패: ${JSON.stringify(routeJson)}` }), { status: 500 });
   }
 
-  // Step 2: worker 호출
-  const workerUrl = routeJson.url.replace(/\/+$/, "") + "/v1/chat/completions";
+  // Step 2: worker 호출 (http → https 강제)
+  const workerUrl = routeJson.url
+    .replace(/\/+$/, "")
+    .replace(/^http:\/\//, "https://")
+    + "/v1/chat/completions";
+
   const workerBody = {
     auth_data: {
       signature:   routeJson.signature,
@@ -85,7 +89,6 @@ export async function POST(req: NextRequest) {
     if (!workerResp.ok) {
       return new Response(JSON.stringify({ error: `worker 실패 (${workerResp.status}): ${workerText}` }), { status: 500 });
     }
-
     const result = JSON.parse(workerText);
     const msg = result?.choices?.[0]?.message || {};
     return new Response(
