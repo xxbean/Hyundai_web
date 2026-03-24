@@ -1,3 +1,6 @@
+export const runtime = 'nodejs';
+export const maxDuration = 60;
+
 import { NextRequest } from "next/server";
 
 const DEFAULT_ENDPOINT = "HYUNDAI-CHAT-A100";
