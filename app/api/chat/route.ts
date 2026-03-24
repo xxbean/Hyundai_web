@@ -1,3 +1,9 @@
+import { Agent } from "undici";
+
+const insecureAgent = new Agent({
+  connect: { rejectUnauthorized: false },
+});
+
 import { NextRequest } from "next/server";
 
 const DEFAULT_ENDPOINT = "HYUNDAI-CHAT-A100";
@@ -77,6 +83,8 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify(workerBody),
+      // @ts-ignore
+      dispatcher: insecureAgent,
     });
     const workerText = await workerResp.text();
     if (!workerResp.ok) {
