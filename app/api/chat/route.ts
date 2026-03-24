@@ -61,11 +61,8 @@ export async function POST(req: NextRequest) {
     return new Response(JSON.stringify({ error: `worker 라우팅 실패: ${JSON.stringify(routeJson)}` }), { status: 500 });
   }
 
-  // Step 2: worker 호출 (http → https 강제)
-  const workerUrl = routeJson.url
-    .replace(/\/+$/, "")
-    .replace(/^http:\/\//, "https://")
-    + "/v1/chat/completions";
+  // Step 2: worker 호출
+  const workerUrl = routeJson.url.replace(/\/+$/, "") + "/v1/chat/completions";
 
   const workerBody = {
     auth_data: {
@@ -86,6 +83,8 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify(workerBody),
     });
     const workerText = await workerResp.text();
+    console.log("worker status:", workerResp.status);  // ← 추가
+    console.log("worker response:", workerText);        // ← 추가
     if (!workerResp.ok) {
       return new Response(JSON.stringify({ error: `worker 실패 (${workerResp.status}): ${workerText}` }), { status: 500 });
     }
